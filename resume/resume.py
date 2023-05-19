@@ -2,8 +2,8 @@ import streamlit as st
 
 from PIL import Image
 
-with open('style.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+# with open('style.css') as f:
+#     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 image=Image.open('img.png')
 st.image(image,width=190,)
