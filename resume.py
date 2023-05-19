@@ -1,6 +1,11 @@
+import re
 import streamlit as st 
 
 from PIL import Image
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
@@ -14,6 +19,10 @@ st.write('''
 st.markdown('<h1 style="color: #13C7F0;  font-size: 44;border: border-radius: 10px; font-weight: bolder;" >Resume</h1>', unsafe_allow_html=True)
 
 st.markdown('<h2 style="color: #f09139;">Summary</h2>', unsafe_allow_html=True)
+
+
+
+
 
 
 st.info("""
@@ -44,6 +53,9 @@ st.markdown("""
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#social-media">Social Media</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#Contact">Social Media</a>
       </li>
     </ul>
   </div>
@@ -130,24 +142,15 @@ txt3("""- Similar images ""","""
 """)
 
 
-
-
-
-
-#####################
-
-
-
-
 #####################
 st.markdown('<h3 style="color: #f09139;">Skills</h3>', unsafe_allow_html=True)
 
 txt3('Programming', '`Python`, `R`')
-txt3('Data processing', '`SQL`, `pandas`, `numpy`')
+txt3('Data processing', '`SQL`, `pandas`, `numpy`,`spark`')
 txt3('Data visualization', '`matplotlib`, `seaborn`')
 txt3('Machine Learning', '`scikit-learn`')
 txt3('Deep Learning', '`TensorFlow`, `Pytorch`')
-txt3('Web development', '`Flask`, `HTML`, `CSS`')
+txt3('Web development', '`Flask`, `HTML`, `CSS`,`Django`')
 txt3('Model deployment', '`streamlit`')
 txt3(' Mobile developement', '`Flutter`')
 
@@ -158,5 +161,57 @@ txt2('LinkedIn', 'https://www.linkedin.com/in/iyed-touati-41a088226/')
 txt2('Facebook', 'https://www.facebook.com/iyed.touati.432002/')
 txt2('GitHub', 'https://github.com/luckyman147')
 
+
+st.markdown('<h3 style="color: #f09139;">Contact us</h3>', unsafe_allow_html=True)
+txt2('Gmail', 'iyedtouato@gmail.com')
+
+password='iwkmaopzfeixeeyp'
+def extract_name_from_email(email):
+    # Extract the name part before the @ symbol using regular expressions
+    name_match = re.match(r'([^@]+)', email)
+    if name_match:
+        name = name_match.group(1)
+        return name
+    else:
+        return None
+frmm=st.text_input('Write your gmail ')
+email='iyedtouato@gmail.com'
+if st.button("Send Email"):
+    try:
+        # Create a multipart message
+        msg = MIMEMultipart()
+        msg["From"] = email
+        msg["To"] = frmm
+        msg["Subject"] = 'Thank you for visiting my portfolio'
+        name=extract_name_from_email(frmm)
+        message=message = f"""Dear {name},
+
+I hope this email finds you well. I wanted to take a moment to express my sincere gratitude for visiting my portfolio. It was a pleasure to have you explore my work and learn more about my skills and experience.
+
+I appreciate the time you dedicated to reviewing my projects, achievements, and qualifications. Your interest in my portfolio means a lot to me, and I'm glad you found value in my work.
+
+If you have any further questions or would like to discuss potential collaborations or opportunities, please feel free to reach out. I'm always open to connecting with like-minded individuals in the industry.
+
+Once again, thank you for your visit. Your support and interest in my portfolio are truly appreciated. I look forward to staying in touch and potentially working together in the future.
+
+Best regards,
+
+Iyed Touati
+"""
+        # Attach the message to the email
+        msg.attach(MIMEText(message, "plain"))
+
+        # Create SMTP session
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            # Start TLS for security
+            server.starttls()
+            # Login to the email account
+            server.login(email, password)
+            # Send email
+            server.sendmail(email, frmm, msg.as_string())
+        
+        st.success("Email sent successfully!")
+    except Exception as e:
+        st.error(f"Error occurred while sending the email: {e}")
 
           
